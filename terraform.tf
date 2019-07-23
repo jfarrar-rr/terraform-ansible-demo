@@ -50,31 +50,29 @@ resource "digitalocean_firewall" "demo-firewall" {
     "${digitalocean_droplet.demo-02.id}",
   ]
 
-  inbound_rule = [
-    {
-      protocol         = "tcp"
-      port_range       = "22"
-      source_addresses = ["0.0.0.0/0"]
-    },
-    {
-      protocol                  = "tcp"
-      port_range                = "80"
-      source_load_balancer_uids = ["${digitalocean_loadbalancer.demo-lb.id}"]
-    },
-  ]
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = ["0.0.0.0/0"]
+  }
 
-  outbound_rule = [
-    {
-      protocol              = "tcp"
-      port_range            = "all"
-      destination_addresses = ["0.0.0.0/0"]
-    },
-    {
-      protocol              = "udp"
-      port_range            = "all"
-      destination_addresses = ["0.0.0.0/0"]
-    },
-  ]
+  inbound_rule {
+    protocol                  = "tcp"
+    port_range                = "80"
+    source_load_balancer_uids = ["${digitalocean_loadbalancer.demo-lb.id}"]
+  }
+
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "all"
+    destination_addresses = ["0.0.0.0/0"]
+  }
+
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "all"
+    destination_addresses = ["0.0.0.0/0"]
+  }
 }
 
 # create an ansible inventory file
